@@ -43,10 +43,10 @@ class Fix(object):
         for problem in problems:
             if problem[0] != should:
                 should = problem[0]
-                print "### shouldn't be: {0}".format(should)
+                print "### shouldn't be in: {0}".format(should)
             if shouldnt != problem[1]:
                 shouldnt = problem[1]
-                print "# should be {0}".format(shouldnt)
+                print "# should be in {0}".format(shouldnt)
             print problem[2]
 
 
