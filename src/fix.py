@@ -1,5 +1,6 @@
 import os
 
+from operator import itemgetter
 from dns import zone
 from iscpy.iscpy_dns.named_importer_lib import MakeNamedDict
 
@@ -22,26 +23,46 @@ class Fix(object):
 
     def fix(self):
         zones = self.calculate_potential_violations()
+        # Problems is a list of tuples that have the format:
+        #   (current_incorrect_zone_file, correct_zone_file, record)
+        problems = []
         for base_zone, child_zones in zones.iteritems():
             # bzone is an actual dns.zone object
             bzone = self.get_zone_data(
                 base_zone, self.zones[base_zone]['file'], self.rel_path
             )
-            self.look_for_violations(bzone, child_zones)
+            problems += self.look_for_violations(bzone, child_zones)
+
+        self.show_problems(sorted(problems))
+
+    def show_problems(self, problems):
+        if not problems:
+            return
+        should = problems[0]
+        shouldnt = ''
+        for problem in problems:
+            if problem[0] != should:
+                should = problem[0]
+                print "### shouldn't be: {0}".format(should)
+            if shouldnt != problem[1]:
+                shouldnt = problem[1]
+                print "# from {0}".format(shouldnt)
+            print problem[2]
+
 
     def look_for_violations(self, bzone, child_zones):
+        problems = []
         for name, rdata in bzone.iterate_rdatasets():
             name_ = name.to_text().strip('.')
             violation = corrected = None
             for child_zone in child_zones:
                 if name_.endswith(child_zone):
-                    violation =  "Violation! {0} {1} shouldn't be in {2}".format(
-                        name_, rdata.to_text(), bzone.origin
-                    )
                     corrected = child_zone
             if self.show_corrected and corrected:
-                print violation
-                print "It should be in {0}'s zone file".format(corrected)
+                violation = "{0} {1}".format(name_, rdata.to_text())
+                #   (current_incorrect_zone_file, correct_zone_file, record)
+                problems.append((bzone.origin.to_text(), corrected, violation))
+        return problems
 
 
     def calculate_potential_violations(self):
