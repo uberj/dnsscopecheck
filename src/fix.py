@@ -46,7 +46,7 @@ class Fix(object):
                 print "### shouldn't be: {0}".format(should)
             if shouldnt != problem[1]:
                 shouldnt = problem[1]
-                print "# from {0}".format(shouldnt)
+                print "# should be {0}".format(shouldnt)
             print problem[2]
 
 
