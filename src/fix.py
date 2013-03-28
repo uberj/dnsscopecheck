@@ -5,7 +5,8 @@ from iscpy.iscpy_dns.named_importer_lib import MakeNamedDict
 
 
 class Fix(object):
-    def __init__(self, conf_files, rel_path):
+    def __init__(self, conf_files, rel_path, show_corrected):
+        self.show_corrected = show_corrected
         self.rel_path = rel_path
         self.zones = {}
 
@@ -31,11 +32,17 @@ class Fix(object):
     def look_for_violations(self, bzone, child_zones):
         for name, rdata in bzone.iterate_rdatasets():
             name_ = name.to_text().strip('.')
+            violation = corrected = None
             for child_zone in child_zones:
                 if name_.endswith(child_zone):
-                    print "Violation! {0} {1} shouldn't be in {1}".format(
+                    violation =  "Violation! {0} {1} shouldn't be in {2}".format(
                         name_, rdata.to_text(), bzone.origin
                     )
+                    corrected = child_zone
+            if self.show_corrected and corrected:
+                print violation
+                print "It should be in {0}'s zone file".format(corrected)
+
 
     def calculate_potential_violations(self):
         ret = {}
