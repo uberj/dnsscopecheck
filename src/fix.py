@@ -56,7 +56,7 @@ class Fix(object):
             name_ = name.to_text().strip('.')
             violation = corrected = None
             for child_zone in child_zones:
-                if name_.endswith(child_zone):
+                if name_.endswith('.' + child_zone):
                     corrected = child_zone
             if self.show_corrected and corrected:
                 violation = "{0} {1}".format(name_, rdata.to_text())
