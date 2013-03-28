@@ -1,10 +1,10 @@
-; bar.foo.com
-@                           IN  SOA ns.foo.com. noc.foo.com.  (
+; bar.foo.net
+@                           IN  SOA ns.foo.net. noc.foo.net.  (
                                 2012051500
                                 10800
                                 3600
                                 604800
                                 1800
                             )
-                            IN  NS      ns.foo.com.
+                            IN  NS      ns.foo.net.
                             IN A 10.0.0.0

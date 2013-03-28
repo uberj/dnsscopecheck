@@ -52,15 +52,18 @@ class Fix(object):
     def look_for_violations(self, bzone, child_zones):
         problems = []
         for name, rdata in bzone.iterate_rdatasets():
+            origin = bzone.origin.to_text().strip('.')
             name_ = name.to_text().strip('.')
             violation = corrected = None
             for child_zone in child_zones:
-                if name_.endswith('.' + child_zone):
+                if name_ == child_zone:
+                    corrected = child_zone
+                elif name_.endswith('.' + child_zone):
                     corrected = child_zone
             if self.show_corrected and corrected:
                 violation = "{0} {1}".format(name_, rdata.to_text())
                 #   (current_incorrect_zone_file, correct_zone_file, record)
-                problems.append((bzone.origin.to_text(), corrected, violation))
+                problems.append((origin, corrected, violation))
         return problems
 
     def calculate_potential_violations(self):

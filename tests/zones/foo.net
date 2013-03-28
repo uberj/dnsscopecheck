@@ -10,3 +10,4 @@
                             IN A 10.0.0.0
 
 bar.foo.net.            IN A 10.0.0.1  ; Violation
+vio2.bar.foo.net.            IN A 10.0.0.1  ; Violation
