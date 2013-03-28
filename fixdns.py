@@ -8,13 +8,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Detect broken records')
     parser.add_argument(
         '--rel-path', dest="rel_path", type=str, required=True,
-         help="The relative path needed for parsing zone files. (Where named "
-         "would run)"
+        help="The relative path needed for parsing zone files. (Where named "
+        "would run)"
     )
 
     parser.add_argument(
         '--show-corrected', dest="show_corrected", type=bool, default=True,
-         help="Suggest the correct zone file when violation is found"
+        help="Suggest the correct zone file when violation is found"
     )
 
     conf = parser.add_mutually_exclusive_group()

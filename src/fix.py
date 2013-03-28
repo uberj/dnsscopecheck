@@ -49,7 +49,6 @@ class Fix(object):
                 print "# should be in {0}".format(shouldnt)
             print problem[2]
 
-
     def look_for_violations(self, bzone, child_zones):
         problems = []
         for name, rdata in bzone.iterate_rdatasets():
@@ -63,7 +62,6 @@ class Fix(object):
                 #   (current_incorrect_zone_file, correct_zone_file, record)
                 problems.append((bzone.origin.to_text(), corrected, violation))
         return problems
-
 
     def calculate_potential_violations(self):
         ret = {}
