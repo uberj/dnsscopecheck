@@ -1,20 +1,29 @@
 import os
+import re
 
-from operator import itemgetter
 from dns import zone
 from iscpy.iscpy_dns.named_importer_lib import MakeNamedDict
 
 
 class Fix(object):
-    def __init__(self, conf_files, rel_path, show_corrected):
+    def __init__(self, rel_path, show_corrected, config_files=None,
+                 view_file=None, debug=False):
+        self.debug = debug
         self.show_corrected = show_corrected
         self.rel_path = rel_path
         self.zones = {}
 
         # Loop over config files and collect their zone statements
-        for conf_file in conf_files:
-            parsed = self.parse_config_data(conf_file)
-            self.zones.update(parsed)
+        if config_files:
+            for conf_file in config_files:
+                parsed = self.parse_config_data(conf_file)
+                self.zones.update(parsed)
+        elif view_file:
+            self.zones = self.parse_view_config_data(view_file)
+        else:
+            print "Need some config options"
+            return
+
 
         # Zone names sorted in order from longest to shortest
         self.ordered_zones = sorted(
@@ -22,6 +31,8 @@ class Fix(object):
         )
 
     def fix(self):
+        if not self.zones:
+            return
         zones = self.calculate_potential_violations()
         # Problems is a list of tuples that have the format:
         #   (current_incorrect_zone_file, correct_zone_file, record)
@@ -33,9 +44,10 @@ class Fix(object):
             )
             problems += self.look_for_violations(bzone, child_zones)
 
-        self.show_problems(sorted(problems))
+        return self.show_problems(sorted(problems))
 
     def show_problems(self, problems):
+        ret = []
         if not problems:
             return
         should = problems[0]
@@ -43,11 +55,12 @@ class Fix(object):
         for problem in problems:
             if problem[0] != should:
                 should = problem[0]
-                print "### shouldn't be in: {0}".format(should)
+                ret.append("### shouldn't be in: {0}".format(should))
             if shouldnt != problem[1]:
                 shouldnt = problem[1]
-                print "# should be in {0}".format(shouldnt)
-            print problem[2]
+                ret.append("# should be in {0}".format(shouldnt))
+            ret.append(problem[2])
+        return ret
 
     def look_for_violations(self, bzone, child_zones):
         problems = []
@@ -69,18 +82,40 @@ class Fix(object):
     def calculate_potential_violations(self):
         ret = {}
         for ozone in self.ordered_zones:
-            print "--Processing {0}".format(ozone)
+            if self.debug:
+                print "--Processing {0}".format(ozone)
             for izone in self.ordered_zones:
                 if ozone == izone:
                     continue
                 if ozone.endswith('.' + izone):
-                    print "{0} is a child zone of {1}".format(ozone, izone)
+                    if self.debug:
+                        print "{0} is a child zone of {1}".format(ozone, izone)
                     ret.setdefault(izone, []).append(ozone)
         return ret
 
     def parse_config_data(self, filepath):
         zones = MakeNamedDict(open(filepath).read())
         return zones['orphan_zones']
+
+    def parse_view_config_data(self, filepath):
+        cwd = os.getcwd()
+        try:
+            os.chdir(self.rel_path)
+            include_m = re.compile("\s+include\s+['\"](\S+)['\"]")
+            includes = []
+            with open(filepath) as fd:
+                for line in fd:
+                    m = include_m.match(line)
+                    if m:
+                        includes.append(m.groups()[0])
+
+            zones = {}
+            for conf_file in includes:
+                parsed = self.parse_config_data(conf_file)
+                zones.update(parsed)
+            return zones
+        finally:
+            os.chdir(cwd)
 
     def get_zone_data(self, zone_name, filepath, dirpath):
         cwd = os.getcwd()
