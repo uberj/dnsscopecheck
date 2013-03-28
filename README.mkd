@@ -1,2 +1,0 @@
-pip install -e git://github.com/uberj/iscpy.git#egg=iscpy
-pip install -e git://github.com/uberj/dnspython.git#egg=dns
