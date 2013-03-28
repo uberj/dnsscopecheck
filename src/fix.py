@@ -44,7 +44,7 @@ class Fix(object):
             for izone in self.ordered_zones:
                 if ozone == izone:
                     continue
-                if ozone.endswith(izone):
+                if ozone.endswith('.' + izone):
                     print "{0} is a child zone of {1}".format(ozone, izone)
                     ret.setdefault(izone, []).append(ozone)
         return ret
