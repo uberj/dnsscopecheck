@@ -53,7 +53,7 @@ Caveats
 -------
 A lot of dirty hacks happen because named runs in a chroot and this script does
 not. There is a file called 'paths.py' that contains tuples of paths that are
-swapped when ever a file is loaded. This swapping is an attempt to replicate
+swapped whenever a file is loaded. This swapping is an attempt to replicate
 the chroot environment.
 
 Some zone statements reference files that are signed (files that end in a
