@@ -1,5 +1,4 @@
 import re
-import os
 
 from dns import zone
 from iscpy.iscpy_dns.named_importer_lib import MakeNamedDict
@@ -9,7 +8,8 @@ from paths import swap_paths
 
 class Fix(object):
     def __init__(self, named_path, show_corrected, config_files=None,
-                 view_file=None, debug=False):
+                 view_file=None, debug=False, ignore_signed=True):
+        self.ignore_signed = ignore_signed
         self.named_path = named_path
         self.debug = debug
         self.show_corrected = show_corrected
@@ -18,6 +18,8 @@ class Fix(object):
         # Loop over config files and collect their zone statements
         if config_files:
             for conf_file in config_files:
+                if self.ignore_signed and conf_file.endswith('.signed'):
+                    continue
                 parsed = self.parse_config_data(conf_file)
                 self.zones.update(parsed)
         elif view_file:

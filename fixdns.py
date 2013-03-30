@@ -19,6 +19,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        '--ignore-signed', dest='ignore_signed', action='store_true',
+        default=True,
+        help="Ignore Signed zone files (True by default)"
+    )
+
+    parser.add_argument(
         '--show-corrected', dest='show_corrected', type=bool, default=True,
         help="Suggest the correct zone file when violation is found"
     )
@@ -51,7 +57,8 @@ if __name__ == "__main__":
         os.chdir(nas.named_path)
         f = Fix(
             nas.named_path, nas.show_corrected, config_files=c,
-            view_file=nas.view_file, debug=nas.debug
+            view_file=nas.view_file, debug=nas.debug,
+            ignore_signed=nas.ignore_signed
         )
         os.chdir(nas.named_path)
         ret = f.fix()
