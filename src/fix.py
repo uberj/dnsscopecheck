@@ -42,7 +42,7 @@ class Fix(object):
             # bzone is an actual dns.zone object
             zone_file = self.zones[base_zone]['file']
             if self.ignore_signed and zone_file.endswith('.signed'):
-                zone_file = zone_file.strip('.signed')
+                zone_file = zone_file.strip('signed').strip('.')
             bzone = self.get_zone_data(
                 base_zone, self.swap_paths(zone_file),
                 self.named_path

@@ -6,4 +6,5 @@
 # script would have any occurences of '/foo/bar/' swapped with '/baz/bar/'
 swap_paths = (
     ('/var/run/named/', ''),
+    ('/var/named/', ''),
 )
