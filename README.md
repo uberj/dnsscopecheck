@@ -57,6 +57,6 @@ swapped whenever a file is loaded. This swapping is an attempt to replicate
 the chroot environment.
 
 Some zone statements reference files that are signed (files that end in a
-'.signed' suffix), this script attempts to *not* use signed zone files and will
-strip a '.signed' suffix from a file path when a zone's data is being loaded.
-You can control this behavior with the `--use-signed` flag.
+'.signed' suffix), by default this script attempts to *not* use signed zone
+files and will strip a '.signed' suffix from a file path when a zone's data is
+being loaded.  You can control this behavior with the `--use-signed` flag.
