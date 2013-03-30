@@ -41,10 +41,8 @@ class Fix(object):
         for base_zone, child_zones in zones.iteritems():
             # bzone is an actual dns.zone object
             zone_file = self.zones[base_zone]['file']
-            import pdb;pdb.set_trace()
             if self.ignore_signed and zone_file.endswith('.signed'):
-                print "##########################"
-                print zone_file
+                zone_file = zone_file.strip('.signed')
             bzone = self.get_zone_data(
                 base_zone, self.swap_paths(zone_file),
                 self.named_path
