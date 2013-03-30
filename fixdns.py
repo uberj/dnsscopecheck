@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 
 from src.fix import Fix
@@ -7,7 +8,7 @@ from src.fix import Fix
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Detect broken records')
     parser.add_argument(
-        '--rel-path', dest='rel_path', type=str, required=True,
+        '--named-path', dest='named_path', type=str, required=True,
         help="The relative path needed for parsing zone files. (Where named "
         "would run)"
     )
@@ -45,11 +46,18 @@ if __name__ == "__main__":
         with open(nas.config_files) as fd:
             c = [f.strip() for f in fd]
 
-    f = Fix(
-        nas.rel_path, nas.show_corrected, config_files=c,
-        view_file=nas.view_file, debug=nas.debug
-    )
-    ret = f.fix()
+    cwd = os.getcwd()
+    try:
+        os.chdir(nas.named_path)
+        f = Fix(
+            nas.named_path, nas.show_corrected, config_files=c,
+            view_file=nas.view_file, debug=nas.debug
+        )
+        os.chdir(nas.named_path)
+        ret = f.fix()
+    finally:
+        os.chdir(cwd)
+
     if ret:
         print '\n'.join(ret)
         sys.exit(1)

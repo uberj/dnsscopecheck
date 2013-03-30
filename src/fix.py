@@ -1,16 +1,18 @@
-import os
 import re
+import os
 
 from dns import zone
 from iscpy.iscpy_dns.named_importer_lib import MakeNamedDict
 
+from paths import swap_paths
+
 
 class Fix(object):
-    def __init__(self, rel_path, show_corrected, config_files=None,
+    def __init__(self, named_path, show_corrected, config_files=None,
                  view_file=None, debug=False):
+        self.named_path = named_path
         self.debug = debug
         self.show_corrected = show_corrected
-        self.rel_path = rel_path
         self.zones = {}
 
         # Loop over config files and collect their zone statements
@@ -23,7 +25,6 @@ class Fix(object):
         else:
             print "Need some config options"
             return
-
 
         # Zone names sorted in order from longest to shortest
         self.ordered_zones = sorted(
@@ -40,7 +41,8 @@ class Fix(object):
         for base_zone, child_zones in zones.iteritems():
             # bzone is an actual dns.zone object
             bzone = self.get_zone_data(
-                base_zone, self.zones[base_zone]['file'], self.rel_path
+                base_zone, self.swap_paths(self.zones[base_zone]['file']),
+                self.named_path
             )
             problems += self.look_for_violations(bzone, child_zones)
 
@@ -98,28 +100,29 @@ class Fix(object):
         return zones['orphan_zones']
 
     def parse_view_config_data(self, filepath):
-        cwd = os.getcwd()
-        try:
-            os.chdir(self.rel_path)
-            include_m = re.compile("\s+include\s+['\"](\S+)['\"]")
-            includes = []
-            with open(filepath) as fd:
-                for line in fd:
-                    m = include_m.match(line)
-                    if m:
-                        includes.append(m.groups()[0])
+        include_m = re.compile("\s+include\s+['\"](\S+)['\"]")
+        includes = []
+        with open(filepath) as fd:
+            for line in fd:
+                m = include_m.match(line)
+                if m:
+                    path = m.groups()[0]
+                    includes.append(self.swap_paths(path))
 
-            zones = {}
-            for conf_file in includes:
-                parsed = self.parse_config_data(conf_file)
-                zones.update(parsed)
-            return zones
-        finally:
-            os.chdir(cwd)
+        zones = {}
+        for conf_file in includes:
+            parsed = self.parse_config_data(conf_file)
+            zones.update(parsed)
+        return zones
+
+    def swap_paths(self, path):
+        for s in swap_paths:
+            path = path.replace(*s)
+        return path
 
     def get_zone_data(self, zone_name, filepath, dirpath):
-        cwd = os.getcwd()
-        os.chdir(dirpath)
+        #cwd = os.getcwd()
+        #os.chdir(dirpath)
         mzone = zone.from_file(filepath, zone_name, relativize=False)
-        os.chdir(cwd)
+        #os.chdir(cwd)
         return mzone

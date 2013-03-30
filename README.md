@@ -6,6 +6,7 @@ Look for records that are in one zone file, but should be in another.
 Installing
 ----------
 ```
+sudo yum install fakeroot
 mkdir fixdns
 cd fixdns
 virtualenv venv
