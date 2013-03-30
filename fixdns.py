@@ -19,9 +19,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        '--ignore-signed', dest='ignore_signed', action='store_true',
-        default=True,
-        help="Ignore Signed zone files (True by default)"
+        '--use-signed', dest='use_signed', action='store_true',
+        default=False,
+        help="Use signed zone files (False by default)"
     )
 
     parser.add_argument(
@@ -53,12 +53,12 @@ if __name__ == "__main__":
             c = [f.strip() for f in fd]
 
     cwd = os.getcwd()
-    try:
+    try:  # cd to where named would be
         os.chdir(nas.named_path)
         f = Fix(
             nas.named_path, nas.show_corrected, config_files=c,
             view_file=nas.view_file, debug=nas.debug,
-            ignore_signed=nas.ignore_signed
+            use_signed=nas.use_signed
         )
         os.chdir(nas.named_path)
         ret = f.fix()

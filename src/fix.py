@@ -8,8 +8,8 @@ from paths import swap_paths
 
 class Fix(object):
     def __init__(self, named_path, show_corrected, config_files=None,
-                 view_file=None, debug=False, ignore_signed=True):
-        self.ignore_signed = ignore_signed
+                 view_file=None, debug=False, use_signed=True):
+        self.use_signed = use_signed
         self.named_path = named_path
         self.debug = debug
         self.show_corrected = show_corrected
@@ -41,7 +41,7 @@ class Fix(object):
         for base_zone, child_zones in zones.iteritems():
             # bzone is an actual dns.zone object
             zone_file = self.zones[base_zone]['file']
-            if self.ignore_signed and zone_file.endswith('.signed'):
+            if not self.use_signed and zone_file.endswith('.signed'):
                 zone_file = zone_file.strip('signed').strip('.')
             bzone = self.get_zone_data(
                 base_zone, self.swap_paths(zone_file),
