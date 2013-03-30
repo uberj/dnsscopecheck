@@ -18,8 +18,6 @@ class Fix(object):
         # Loop over config files and collect their zone statements
         if config_files:
             for conf_file in config_files:
-                if self.ignore_signed and conf_file.endswith('.signed'):
-                    continue
                 parsed = self.parse_config_data(conf_file)
                 self.zones.update(parsed)
         elif view_file:
@@ -42,8 +40,13 @@ class Fix(object):
         problems = []
         for base_zone, child_zones in zones.iteritems():
             # bzone is an actual dns.zone object
+            zone_file = self.zones[base_zone]['file']
+            import pdb;pdb.set_trace()
+            if self.ignore_signed and zone_file.endswith('.signed'):
+                print "##########################"
+                print zone_file
             bzone = self.get_zone_data(
-                base_zone, self.swap_paths(self.zones[base_zone]['file']),
+                base_zone, self.swap_paths(zone_file),
                 self.named_path
             )
             problems += self.look_for_violations(bzone, child_zones)
