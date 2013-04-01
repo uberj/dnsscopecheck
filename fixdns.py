@@ -9,7 +9,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Detect broken records')
     parser.add_argument(
         '--named-path', dest='named_path', type=str, required=True,
-        help="The relative path needed for parsing zone files. (Where named "
+        help="A full path to where named would be running. (Where named "
         "would run)"
     )
 
