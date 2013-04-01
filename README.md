@@ -47,7 +47,7 @@ optional arguments:
 Example Output
 --------------
 ```
-[uberj@leo fixdns]$ python fixdns.py --named-path `pwd`/tests/chroot/var/run/named/ --view-file config/view.conf
+[uberj@leo fixdns]$ python fixdns.py --named-path `pwd`/tests/chroot/var/run/named/ --view-file config/view.conf --debug
 --Processing baz.bar.foo.com
 baz.bar.foo.com is a child zone of bar.foo.com
 baz.bar.foo.com is a child zone of foo.com
