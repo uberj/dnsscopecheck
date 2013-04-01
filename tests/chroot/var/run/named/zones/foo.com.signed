@@ -1,0 +1,15 @@
+; foo.com
+@                           IN  SOA ns.foo.com. noc.foo.com.  (
+                                2012051500
+                                10800
+                                3600
+                                604800
+                                1800
+                            )
+                            IN  NS      ns.foo.com.
+                            IN A 10.0.0.0
+
+baz.bar.foo.com.            IN A 10.0.0.1  ; Violation
+bar.foo.com.                IN A 10.0.0.2  ; Violation
+baz.foo.com.                IN A 10.0.0.3  ; Violation
+vio1.baz.foo.com.           IN A 10.0.0.3  ; Violation
