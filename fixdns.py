@@ -9,8 +9,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Detect broken records')
     parser.add_argument(
         '--named-path', dest='named_path', type=str, required=True,
-        help="A full path to where named would be running. (Where named "
-        "would run)"
+        help="A full path to where named would be running."
     )
 
     parser.add_argument(
@@ -21,12 +20,13 @@ if __name__ == "__main__":
     parser.add_argument(
         '--use-signed', dest='use_signed', action='store_true',
         default=False,
-        help="Use signed zone files (False by default)"
+        help="Check signed zone files for errors (False by default)"
     )
 
     parser.add_argument(
         '--show-corrected', dest='show_corrected', type=bool, default=True,
-        help="Suggest the correct zone file when violation is found"
+        help="Suggest the correct zone file when a violation is found "
+        "(True by default)"
     )
 
     conf = parser.add_mutually_exclusive_group()
@@ -36,11 +36,11 @@ if __name__ == "__main__":
     )
     conf.add_argument(
         '--config-files', dest='config_files', type=str,
-        default=None, help="A file paths to other config files"
+        default=None, help="A file containing full paths to other config files"
     )
     conf.add_argument(
         '--view-file', dest='view_file', type=str,
-        default=None, help="A file path to a view file"
+        default=None, help="A full file path to a view file"
     )
 
     nas = parser.parse_args(sys.argv[1:])
