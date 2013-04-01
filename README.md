@@ -18,6 +18,32 @@ cd fixdns
 python fixdns.py --help
 ```
 
+Usage
+-----
+```
+usage: fixdns.py [-h] --named-path NAMED_PATH [--debug] [--use-signed]
+                 [--show-corrected SHOW_CORRECTED]
+                 [--config-file CONFIG_FILE | --config-files CONFIG_FILES | --view-file VIEW_FILE]
+
+Detect broken records
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --named-path NAMED_PATH
+                        A full path to where named would be running.
+  --debug               Print more things than usual
+  --use-signed          Check signed zone files for errors (False by default)
+  --show-corrected SHOW_CORRECTED
+                        Suggest the correct zone file when a violation is
+                        found (True by default)
+  --config-file CONFIG_FILE
+                        A file containing bare zone statements
+  --config-files CONFIG_FILES
+                        A file containing full paths to other config files
+  --view-file VIEW_FILE
+                        A full file path to a view file
+```
+
 Example Output
 --------------
 ```
@@ -53,10 +79,10 @@ Caveats
 -------
 A lot of dirty hacks happen because named runs in a chroot and this script does
 not. There is a file called 'paths.py' that contains tuples of paths that are
-swapped when ever a file is loaded. This swapping is an attempt to replicate
+swapped whenever a file is loaded. This swapping is an attempt to replicate
 the chroot environment.
 
 Some zone statements reference files that are signed (files that end in a
-'.signed' suffix), this script attempts to *not* use signed zone files and will
-strip a '.signed' suffix from a file path when a zone's data is being loaded.
-You can control this behavior with the `--use-signed` flag.
+'.signed' suffix), by default this script attempts to *not* use signed zone
+files and will strip a '.signed' suffix from a file path when a zone's data is
+being loaded.  You can control this behavior with the `--use-signed` flag.
