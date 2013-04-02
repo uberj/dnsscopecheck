@@ -1,5 +1,5 @@
 setup.py
-bin/fixdns
-fixdns/__init__.py
-fixdns/fix.py
-fixdns/paths.py
+bin/dnsscopecheck
+dnsscopecheck/__init__.py
+dnsscopecheck/check.py
+dnsscopecheck/paths.py

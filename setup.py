@@ -2,16 +2,16 @@
 
 from distutils.core import setup
 
-setup(name='fixdns',
+setup(name='dnsscopecheck',
     version='1.0',
     description='Finds errors in DNS zone files',
     author='Jacques Uber',
     author_email='juber@mozilla.com',
-    packages=['fixdns'],
+    packages=['dnsscopecheck'],
     package_data={
-        'fixdns': ['fixdns/fix.py', 'fixdns/paths.py'],
+        'dnsscopecheck': ['dnsscopecheck/check.py', 'dnsscopecheck/paths.py'],
     },
-    scripts=['bin/fixdns'],
-    url='https://github.com/uberj/fixdns',
+    scripts=['bin/dnsscopecheck'],
+    url='https://github.com/uberj/dnsscopecheck',
     license='LICENSE.txt',
 )
