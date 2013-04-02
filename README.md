@@ -1,5 +1,5 @@
-fixdns
-======
+dnsscopecheck
+=============
 
 Look for records that are in one zone file, but should be in another.
 
@@ -7,21 +7,26 @@ Installing
 ----------
 ```
 sudo yum install fakeroot
-mkdir fixdns
-cd fixdns
+mkdir dnsscopecheck
+cd dnsscopecheck
 virtualenv venv
 source venv/bin/activate
 pip install -e git://github.com/uberj/iscpy.git#egg=iscpy
 pip install -e git://github.com/uberj/dnspython.git#egg=dns
-git clone git://github.com/uberj/fixdns.git
-cd fixdns
-python fixdns.py --help
+git clone git://github.com/uberj/dnsscopecheck.git
+cd dnsscopecheck
+python dnsscopecheck.py --help
+```
+
+If you want an rpm use:
+```
+python setup.py bdist_rpm --requires dnspython,iscpy,argparse
 ```
 
 Usage
 -----
 ```
-usage: fixdns.py [-h] --named-path NAMED_PATH [--debug] [--use-signed]
+usage: dnsscopecheck.py [-h] --named-path NAMED_PATH [--debug] [--use-signed]
                  [--show-corrected SHOW_CORRECTED]
                  [--config-file CONFIG_FILE | --config-files CONFIG_FILES | --view-file VIEW_FILE]
 
@@ -47,7 +52,8 @@ optional arguments:
 Example Output
 --------------
 ```
-[uberj@leo fixdns]$ ./bin/fixdns --debug --named-path $(pwd)/fixdns/tests/chroot --view-file $(pwd)/fixdns/tests/chroot/var/run/named/config/view.conf
+[uberj@leo dnsscopecheck]$ export PYTHONPATH=.:$PYTHONPATH
+[uberj@leo dnsscopecheck]$ ./bin/dnsscopecheck --debug --named-path $(pwd)/dnsscopecheck/tests/chroot/var/run/named --view-file $(pwd)/dnsscopecheck/tests/chroot/var/run/named/config/view.conf
 --Processing baz.bar.foo.com
 baz.bar.foo.com is a child zone of bar.foo.com
 baz.bar.foo.com is a child zone of foo.com

@@ -6,7 +6,7 @@ from iscpy.iscpy_dns.named_importer_lib import MakeNamedDict
 from paths import swap_paths
 
 
-class Fix(object):
+class Check(object):
     def __init__(self, named_path, show_corrected, config_files=None,
                  view_file=None, debug=False, use_signed=True):
         self.use_signed = use_signed
@@ -31,7 +31,7 @@ class Fix(object):
             self.zones, cmp=lambda a, b: len(b) - len(a)
         )
 
-    def fix(self):
+    def check(self):
         if not self.zones:
             return
         zones = self.calculate_potential_violations()
